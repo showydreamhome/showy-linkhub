@@ -1,0 +1,401 @@
+/* Showy brand, locations and responsive navigation enhancements */
+.brand-mark {
+  width: 33px;
+  height: 42px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px #0004);
+}
+
+nav {
+  gap: 24px;
+  font-size: 13px;
+}
+
+nav > a:not(.header-cta) {
+  white-space: nowrap;
+}
+
+.menu-toggle,
+.mobile-nav-head {
+  display: none;
+}
+
+.link-grid {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.link-card {
+  min-height: 225px;
+  padding: 26px;
+}
+
+.office { --card: #44675d; }
+.experience { --card: #a66a26; }
+
+.visit-section {
+  background: var(--paper);
+}
+
+.visit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.visit-card {
+  min-height: 330px;
+  border: 1px solid var(--line);
+  padding: 40px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 30px;
+  align-items: start;
+}
+
+.visit-card.featured {
+  background: var(--green);
+  color: #fff;
+  border-color: var(--green);
+}
+
+.visit-icon {
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #eee7db;
+  color: var(--terra);
+}
+
+.visit-card.featured .visit-icon {
+  background: #ffffff14;
+  color: var(--gold);
+}
+
+.visit-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.visit-card h3 {
+  font: 600 34px "Playfair Display";
+  margin: 12px 0;
+}
+
+.visit-card p {
+  color: #707974;
+  line-height: 1.7;
+  max-width: 470px;
+}
+
+.visit-card.featured p { color: #d5dcd8; }
+
+.visit-card > a {
+  grid-column: 2;
+  align-self: end;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--line);
+  padding-top: 20px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.visit-card.featured > a { border-color: #ffffff28; }
+.visit-card > a svg { width: 18px; }
+
+@media (max-width: 1100px) {
+  nav { gap: 14px; font-size: 12px; }
+  .header-cta { padding: 12px 14px; }
+  .link-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 900px) {
+  .site-header {
+    height: 76px;
+    padding: 0 22px;
+  }
+
+  .brand-mark { width: 30px; height: 38px; }
+
+  .menu-toggle {
+    display: grid;
+    place-items: center;
+    border: 1px solid #ffffff70;
+    background: #ffffff10;
+    color: #fff;
+    width: 44px;
+    height: 44px;
+    cursor: pointer;
+  }
+
+  .menu-toggle svg { width: 22px; }
+
+  nav {
+    position: fixed;
+    inset: 0 0 0 18%;
+    z-index: 50;
+    background: #122820;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 25px 28px 40px;
+    transform: translateX(105%);
+    visibility: hidden;
+    transition: transform .38s cubic-bezier(.2,.8,.2,1), visibility .38s;
+    box-shadow: -20px 0 60px #0005;
+  }
+
+  nav.open { transform: none; visibility: visible; }
+
+  .mobile-nav-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 28px;
+    border-bottom: 1px solid #ffffff24;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .2em;
+  }
+
+  .mobile-nav-head button {
+    background: none;
+    border: 0;
+    color: #fff;
+    padding: 7px;
+  }
+
+  .mobile-nav-head svg { width: 22px; }
+
+  nav > a:not(.header-cta) {
+    display: flex;
+    opacity: 1;
+    padding: 20px 2px;
+    border-bottom: 1px solid #ffffff1f;
+    font: 600 23px "Playfair Display";
+  }
+
+  nav .header-cta {
+    margin-top: auto;
+    justify-content: space-between;
+    padding: 18px 20px;
+  }
+
+  .menu-open { overflow: hidden; }
+  .visit-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+  .brand-mark { width: 29px; height: 36px; }
+
+  .hero {
+    height: 760px;
+    min-height: 760px;
+    padding: 145px 24px 120px;
+    background-position: 61% center;
+  }
+
+  .hero-copy h1 { font-size: 55px; }
+  .hero-copy p { font-size: 14px; margin: 20px 0 26px; }
+
+  .hero-proof {
+    left: 24px;
+    right: 24px;
+    bottom: 22px;
+    justify-content: flex-start;
+  }
+
+  .link-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    border: 0;
+  }
+
+  .link-card {
+    min-height: 190px;
+    border: 1px solid var(--line);
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .link-card .number,
+  .link-card .go { display: none; }
+
+  .brand-icon {
+    width: 44px;
+    height: 44px;
+    font-size: 22px;
+    margin-bottom: auto;
+  }
+
+  .brand-icon svg { width: 21px; }
+  .link-card div { padding-top: 22px; }
+  .link-card h3 { font-size: 20px; }
+  .link-card p { font-size: 11px; line-height: 1.45; padding-right: 0; }
+
+  .visit-card {
+    min-height: 320px;
+    padding: 28px;
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .visit-card > a { grid-column: 1; }
+}
+/* ==========================
+SOCIAL ICON COLORS
+========================== */
+
+.brand-icon{
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    background:#f3eee5;
+    transition:0.3s ease;
+}
+
+.brand-icon img{
+    width:32px;
+    height:32px;
+    object-fit:contain;
+    display:block;
+}
+
+.brand-icon i{
+    font-size:30px;
+}
+
+/* Instagram */
+.instagram .brand-icon{
+    background:#fff0f6;
+}
+
+.instagram .brand-icon i{
+    color:#E4405F;
+}
+
+/* Facebook */
+.facebook .brand-icon{
+    background:#eef5ff;
+}
+
+.facebook .brand-icon i{
+    color:#1877F2;
+}
+
+/* YouTube */
+.youtube .brand-icon{
+    background:#fff0f0;
+}
+
+.youtube .brand-icon i{
+    color:#FF0000;
+}
+
+/* Google Reviews */
+.reviews .brand-icon{
+    background:#eef5ff;
+}
+
+.reviews .brand-icon i{
+    color:#4285F4;
+}
+
+/* Website */
+.website .brand-icon{
+    background:#edf7f0;
+}
+
+.website .brand-icon svg{
+    color:#0F9D58;
+}
+
+/* Quotation */
+.quotation .brand-icon{
+    background:#fff6e8;
+}
+
+.quotation .brand-icon svg{
+    color:#f39c12;
+}
+
+/* Office */
+.office .brand-icon{
+    background:#edf5f1;
+}
+
+.office .brand-icon svg{
+    color:#44675d;
+}
+
+/* Experience */
+.experience .brand-icon{
+    background:#fff6eb;
+}
+
+.experience .brand-icon svg{
+    color:#a66a26;
+}
+
+/* SVG Icons */
+.brand-icon svg{
+    width:28px;
+    height:28px;
+    stroke:currentColor;
+    fill:none;
+    stroke-width:1.8;
+}
+
+/* Hover Effects */
+.link-card:hover .brand-icon{
+    transform:scale(1.12);
+}
+
+.link-card.instagram:hover{
+    background:linear-gradient(
+    135deg,
+    rgba(228,64,95,.08),
+    rgba(131,58,180,.08)
+    );
+}
+
+.link-card.facebook:hover{
+    background:rgba(24,119,242,.05);
+}
+
+.link-card.youtube:hover{
+    background:rgba(255,0,0,.05);
+}
+
+.link-card.reviews:hover{
+    background:rgba(66,133,244,.05);
+}
+
+.link-card.website:hover{
+    background:rgba(15,157,88,.05);
+}
+
+.link-card.office:hover{
+    background:rgba(68,103,93,.05);
+}
+
+.link-card.experience:hover{
+    background:rgba(166,106,38,.05);
+}
+
+/* Fix Image Logos */
+.brand-icon img{
+    max-width:30px;
+    max-height:30px;
+    object-fit:contain;
+}
