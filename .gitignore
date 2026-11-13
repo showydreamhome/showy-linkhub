@@ -1,2 +1,5 @@
 /data/
 .env
+
+.env.migration
+.vercel/

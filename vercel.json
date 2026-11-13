@@ -1,0 +1,6 @@
+{
+  "framework": null,
+  "outputDirectory": "public",
+  "rewrites": [{ "source": "/admin", "destination": "/admin.html" }],
+  "functions": { "api/[...path].mjs": { "includeFiles": "public/content.json" } }
+}

@@ -1,10 +1,11 @@
 import { createHash, randomUUID, timingSafeEqual } from "node:crypto";
-import { createServer } from "node:http";
 import { appendFileSync, existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { resolve, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { GALLERY_CATEGORIES } from "./public/gallery-categories.js";
+
+import { cloud, galleryUrl, loadSite, saveSite, loadEnquiries, saveEnquiry, uploadImage } from "./supabase-store.mjs";
 
 const publicDir = fileURLToPath(new URL("./public/", import.meta.url));
 const dataDir = resolve(process.env.DATA_DIR || fileURLToPath(new URL("./data/", import.meta.url)));
@@ -29,9 +30,10 @@ const staticTypes = {
   "gallery-categories.js": "text/javascript", "content.json": "application/json", "hero-interior.png": "image/png", "showy-mark.png": "image/png"
 };
 
-function currentContent() {
+async function currentContent() {
   try {
-    const content = JSON.parse(readFileSync(contentFile, "utf8"));
+    const content = cloud ? await loadSite() : JSON.parse(readFileSync(contentFile, "utf8"));
+    if (!content) return { ...defaults, revision: 0 };
     content.gallery = content.gallery.map((photo) => ({ category: "living", ...photo }));
     return { ...content, stats: { ...defaults.stats, ...content.stats }, contact: { ...defaults.contact, ...content.contact } };
   } catch (error) {
@@ -94,7 +96,7 @@ function validate(data, current) {
     gallery: data.gallery.map(({ src, title, alt, category = "living" }) => {
       if (!Object.hasOwn(GALLERY_CATEGORIES, category)) throw new Error("Select a gallery category.");
       const upload = typeof src === "string" && src.match(uploadPath);
-      if (upload && !existsSync(join(uploadDir, upload[1]))) throw new Error("Upload the missing photo again.");
+      if (upload && !cloud && !existsSync(join(uploadDir, upload[1]))) throw new Error("Upload the missing photo again.");
       return {
         src: upload || src === "hero-interior.png" ? src : webUrl(src),
         title: field(title, 100),
@@ -135,20 +137,20 @@ function imageExtension(bytes) {
   return null;
 }
 
-const server = createServer(async (req, res) => {
+export default async function handler(req, res) {
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
   res.setHeader("X-Frame-Options", "DENY");
   const pathname = req.url.split("?")[0];
   try {
     if (pathname === "/api/content" && req.method === "GET") {
-      return json(res, 200, currentContent());
+      return json(res, 200, await currentContent());
     }
     if (pathname === "/api/enquiries" && req.method === "POST") {
       if (!/^application\/json(?:;|$)/i.test(req.headers["content-type"] || "")) {
         return json(res, 415, { error: "Expected JSON." });
       }
-      const ip = req.socket.remoteAddress;
+      const ip = process.env.VERCEL ? (req.headers["x-real-ip"] || req.socket.remoteAddress) : req.socket.remoteAddress;
       const now = Date.now();
       for (const [address, attempt] of enquiryAttempts) {
         if (attempt.until <= now) enquiryAttempts.delete(address);
@@ -177,15 +179,19 @@ const server = createServer(async (req, res) => {
       } catch {
         return json(res, 400, { error: "Check your name, phone number and project details." });
       }
-      mkdirSync(dataDir, { recursive: true, mode: 0o700 });
-      appendFileSync(enquiriesFile, JSON.stringify(enquiry) + "\n", { mode: 0o600 });
+      if (cloud) {
+        await saveEnquiry(`enquiry-${randomUUID()}`, enquiry);
+      } else {
+        mkdirSync(dataDir, { recursive: true, mode: 0o700 });
+        appendFileSync(enquiriesFile, JSON.stringify(enquiry) + "\n", { mode: 0o600 });
+      }
       return json(res, 201, { saved: true });
     }
     const inbox = pathname === "/api/admin/enquiries" && req.method === "GET";
     const uploading = pathname === "/api/admin/upload" && req.method === "POST";
     if (inbox || uploading || (pathname === "/api/admin" && ["GET", "PUT"].includes(req.method))) {
       if (!passwordHash) return json(res, 503, { error: "Set ADMIN_PASSWORD on the server to enable editing." });
-      const ip = req.socket.remoteAddress;
+      const ip = process.env.VERCEL ? (req.headers["x-real-ip"] || req.socket.remoteAddress) : req.socket.remoteAddress;
       const now = Date.now();
       for (const [address, attempt] of attempts) {
         if (attempt.until <= now) attempts.delete(address);
@@ -200,29 +206,34 @@ const server = createServer(async (req, res) => {
         return json(res, 401, { error: "Incorrect admin password." });
       }
       attempts.delete(ip);
-      if (inbox) return json(res, 200, readEnquiries());
+      if (inbox) return json(res, 200, cloud ? await loadEnquiries() : readEnquiries());
       if (uploading) {
         if (!Object.values(imageTypes).includes(req.headers["content-type"])) {
           return json(res, 415, { error: "Choose a JPG, PNG, or WebP image." });
         }
-        const bytes = await readBody(req, 10 * 1024 * 1024);
-        if (!bytes) return json(res, 413, { error: "Each photo must be 10 MB or smaller." });
+        const maxMB = cloud ? 4 : 10;
+        const bytes = await readBody(req, maxMB * 1024 * 1024);
+        if (!bytes) return json(res, 413, { error: `Each photo must be ${maxMB} MB or smaller.` });
         const ext = imageExtension(bytes);
         if (!ext || imageTypes[ext] !== req.headers["content-type"]) {
           return json(res, 415, { error: "This file does not match its image format." });
         }
         const filename = `${randomUUID()}.${ext}`;
+        if (cloud) {
+          await uploadImage(filename, bytes, imageTypes[ext]);
+          return json(res, 201, { src: galleryUrl(filename) });
+        }
         mkdirSync(uploadDir, { recursive: true });
         writeFileSync(join(uploadDir, filename), bytes, { flag: "wx" });
         return json(res, 201, { src: `/uploads/${filename}` });
       }
-      if (req.method === "GET") return json(res, 200, currentContent());
+      if (req.method === "GET") return json(res, 200, await currentContent());
       if (!/^application\/json(?:;|$)/i.test(req.headers["content-type"] || "")) {
         return json(res, 415, { error: "Expected JSON." });
       }
       const body = await readBody(req, 256 * 1024);
       if (!body) return json(res, 413, { error: "This update is too large." });
-      const current = currentContent();
+      const current = await currentContent();
       let data, next;
       try {
         data = JSON.parse(body);
@@ -232,13 +243,15 @@ const server = createServer(async (req, res) => {
         return json(res, 400, { error: message });
       }
       const { revision } = current;
-      if (data.revision !== revision) {
+      next.revision = revision + 1;
+      if (data.revision !== revision || (cloud && !(await saveSite(next, revision)))) {
         return json(res, 409, { error: "Someone published newer changes. Sign in again to load the latest version." });
       }
-      next.revision = revision + 1;
-      mkdirSync(dataDir, { recursive: true });
-      writeFileSync(`${contentFile}.tmp`, JSON.stringify(next, null, 2));
-      renameSync(`${contentFile}.tmp`, contentFile);
+      if (!cloud) {
+        mkdirSync(dataDir, { recursive: true });
+        writeFileSync(`${contentFile}.tmp`, JSON.stringify(next, null, 2));
+        renameSync(`${contentFile}.tmp`, contentFile);
+      }
       return json(res, 200, next);
     }
 
@@ -266,8 +279,14 @@ const server = createServer(async (req, res) => {
     console.error(error);
     if (!res.headersSent) json(res, 500, { error: "The server could not complete the request." });
   }
-});
+}
 
-const port = Number(process.env.PORT || 3000);
-const host = process.env.HOST || "127.0.0.1";
-server.listen(port, host, () => console.log(`Showy Link Hub listening on http://${host}:${server.address().port}`));
+export async function start() {
+  const { createServer } = await import("node:http");
+  const server = createServer(handler);
+  const port = Number(process.env.PORT || 3000);
+  const host = process.env.HOST || "127.0.0.1";
+  server.listen(port, host, () => console.log(`Showy Link Hub listening on http://${host}:${server.address().port}`));
+}
+
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) await start();
