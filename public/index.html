@@ -13,6 +13,7 @@
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="styles-v2.css" />
+  <link rel="stylesheet" href="gallery.css" />
 </head>
 <body>
   <svg class="svg-sprite" aria-hidden="true">
@@ -34,10 +35,12 @@
       <img class="brand-mark" src="showy-mark.png" alt="Showy logo" />
       <span><strong>SHOWY</strong><small>INTERIORS & CONSTRUCTIONS</small></span>
     </a>
+    <a class="mobile-gallery" href="#gallery">Gallery</a>
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mainNav" aria-label="Open menu"><svg><use href="#menu"/></svg></button>
     <nav id="mainNav" aria-label="Main navigation">
       <div class="mobile-nav-head"><span>Navigate</span><button type="button" aria-label="Close menu"><svg><use href="#close"/></svg></button></div>
       <a href="#connect">Explore</a>
+      <a href="#gallery">Gallery</a>
       <a href="#services">Services</a>
       <a href="#experience">Experience Centre</a>
       <a data-link="office" href="#" target="_blank" rel="noopener">Office Location</a>
@@ -50,15 +53,31 @@
       <div class="hero-shade"></div>
       <div class="hero-copy reveal">
         <span class="eyebrow"><i></i> Thoughtful spaces, beautifully made</span>
-        <h1>Your dream home.<br><em>One click away.</em></h1>
-        <p>Explore our work, meet us online and begin your interior journey—all in one place.</p>
+        <h1><span data-copy="headline">Your dream home.</span><br><em data-copy="highlight">One click away.</em></h1>
+        <p data-copy="intro">Explore our work, meet us online and begin your interior journey—all in one place.</p>
         <a class="primary-button" href="#connect">Discover Showy <svg><use href="#arrow"/></svg></a>
       </div>
       <div class="hero-proof reveal">
         <div class="avatars"><span>SK</span><span>PR</span><span>AM</span></div>
-        <p><strong>4.9 / 5</strong><br>loved by our homeowners</p>
+        <p><strong><span id="hero-rating">4.9</span> / 5</strong><br>loved by our homeowners</p>
       </div>
       <span class="scroll-note">SCROLL TO EXPLORE</span>
+    </section>
+
+    <section class="gallery section" id="gallery" aria-labelledby="gallery-title">
+      <div class="section-heading">
+        <a id="gallery-back" href="#gallery" hidden>← All categories</a>
+        <h2 id="gallery-title">Gallery</h2>
+      </div>
+      <p id="gallery-status" hidden>Photos will appear here when they’re published.</p>
+      <div class="gallery-grid"></div>
+      <dialog id="gallery-viewer" aria-labelledby="gallery-caption">
+        <form method="dialog"><button type="submit" autofocus>Close</button></form>
+        <figure>
+          <img alt="" />
+          <figcaption id="gallery-caption"></figcaption>
+        </figure>
+      </dialog>
     </section>
 
     <section class="connect section" id="connect">
@@ -124,12 +143,12 @@
       <div class="visit-grid">
         <article class="visit-card reveal">
           <span class="visit-icon"><svg><use href="#pin"/></svg></span>
-          <div><span class="kicker">Main office</span><h3>Office Location</h3><p>shop number-1, Cross Gate, House of Hiranandani, Bengaluru, Karnataka 562110.</p></div>
+          <div><span class="kicker">Main office</span><h3>Office Location</h3><p data-contact="officeAddress">shop number-1, Cross Gate, House of Hiranandani, Bengaluru, Karnataka 562110.</p></div>
           <a data-link="office" href="#" target="_blank" rel="noopener">Open in Google Maps <svg><use href="#arrow"/></svg></a>
         </article>
         <article class="visit-card featured reveal">
           <span class="visit-icon"><svg><use href="#centre"/></svg></span>
-          <div><span class="kicker">Walk in & explore</span><h3>Experience Centre</h3><p>Meet our team, view full-size displays and discover materials made for your home.</p></div>
+          <div><span class="kicker">Walk in & explore</span><h3>Experience Centre</h3><p data-contact="experienceDetails">Meet our team, view full-size displays and discover materials made for your home.</p></div>
           <a data-link="experience" href="#" target="_blank" rel="noopener">Open in Google Maps <svg><use href="#arrow"/></svg></a>
         </article>
       </div>
@@ -137,10 +156,10 @@
 
     <section class="numbers">
       <p>Designed with care. Delivered with confidence.</p>
-      <div class="stat"><strong data-count="12">0</strong><span>Years of experience</span></div>
-      <div class="stat"><strong data-count="1800">0</strong><span>Showy Interiors</span></div>
-      <div class="stat"><strong data-count="4.9">0</strong><span>Average rating</span></div>
-      <div class="stat"><strong data-count="72">0</strong><span>Showy Construcions</span></div>
+      <div class="stat"><strong data-count="12" data-stat="years">12</strong><span>Years of experience</span></div>
+      <div class="stat"><strong data-count="1800" data-stat="interiors">1800</strong><span>Showy Interiors</span></div>
+      <div class="stat"><strong data-count="4.9" data-stat="rating">4.9</strong><span>Average rating</span></div>
+      <div class="stat"><strong data-count="72" data-stat="constructions">72</strong><span>Showy Constructions</span></div>
     </section>
 
     <section class="services section" id="services">
@@ -160,16 +179,18 @@
       <div class="quote-copy reveal">
         <span class="kicker">Let’s build something beautiful</span>
         <h2>Your home has a story.<br><em>Let’s design it.</em></h2>
-        <p>Share a few details and continue directly on WhatsApp. No long forms, no waiting around.</p>
+        <p>Send us your project details. You can also continue the conversation on WhatsApp after submitting.</p>
         <div class="contact-row"><a data-link="phone" href="#"><svg><use href="#phone"/></svg> Call us</a><a data-link="whatsapp" href="#" target="_blank"><svg><use href="#message"/></svg> WhatsApp</a></div>
       </div>
       <form class="quote-form reveal" id="quoteForm">
-        <label>Your name<input name="name" type="text" placeholder="e.g. Ananya Rao" required></label>
-        <label>Phone number<input name="phone" type="tel" placeholder="+91 98765 43210" required></label>
+        <label>Your name<input name="name" type="text" maxlength="100" placeholder="e.g. Ananya Rao" required></label>
+        <label>Phone number<input name="phone" type="tel" maxlength="30" placeholder="+91 98765 43210" required></label>
         <label>What are you planning?<select name="project"><option>Complete home interiors</option><option>Modular kitchen</option><option>Living room</option><option>Wardrobes & storage</option><option>Renovation</option><option>Construction</option></select></label>
-        <label>Your city<input name="city" type="text" placeholder="e.g. Bengaluru"></label>
+        <label>Your city<input name="city" type="text" maxlength="100" placeholder="e.g. Bengaluru"></label>
         <button type="submit">Request my quotation <svg><use href="#arrow"/></svg></button>
-        <small>We’ll only use your details to respond to this request.</small>
+        <p id="quote-status" role="status"></p>
+      <a id="quote-whatsapp" target="_blank" rel="noopener" hidden>Continue on WhatsApp</a>
+      <small>We’ll only use your details to respond to this request.</small>
       </form>
     </section>
   </main>
@@ -178,10 +199,11 @@
     <a class="brand brand-light" href="#top"><img class="brand-mark" src="showy-mark.png" alt="Showy logo" /><span><strong>SHOWY</strong><small>INTERIORS</small></span></a>
     <p>Thoughtful interiors for the way you live.</p>
     <span>© <span id="year"></span> Showy Interiors</span>
+    <a href="admin.html">Admin</a>
   </footer>
 
   <a class="floating-wa" data-link="whatsapp" href="#" target="_blank" aria-label="Chat on WhatsApp"><svg><use href="#message"/></svg><span>Chat with us</span></a>
   <div class="toast" role="status" aria-live="polite"></div>
-  <script src="script.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Showy Interiors | Admin</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="admin.css">
+  <script type="module" src="admin.js" defer></script>
+</head>
+<body class="admin">
+  <header>
+    <a class="brand" href="/"><img class="brand-mark" src="showy-mark.png" alt=""><strong>SHOWY</strong></a>
+    <a href="/">View link hub ↗</a>
+  </header>
+  <main>
+    <h1>Link hub admin</h1>
+    <p id="admin-status" role="status"></p>
+    <form id="login">
+      <label for="admin-password">Admin password</label>
+      <div class="password-field">
+        <input id="admin-password" type="password" name="password" autocomplete="current-password" required>
+        <button type="button" id="toggle-password" aria-label="Show password" aria-controls="admin-password">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/>
+            <circle cx="12" cy="12" r="2.5"/>
+            <path class="eye-slash" d="M3 3l18 18"/>
+          </svg>
+        </button>
+      </div>
+      <button type="submit">Sign in</button>
+    </form>
+    <section id="enquiries" class="admin-inbox" hidden aria-labelledby="enquiries-title">
+      <div class="inbox-header">
+        <h2 id="enquiries-title">Enquiries</h2>
+        <button type="button" class="secondary" id="refresh-enquiries">Refresh</button>
+      </div>
+      <p id="enquiries-status" role="status"></p>
+      <ul id="enquiries-list"></ul>
+    </section>
+    <form id="editor" hidden>
+      <fieldset>
+        <legend>Gallery</legend>
+        <div id="category-picker" role="group" aria-label="Gallery category"></div>
+        <label class="drop-zone" id="drop-zone" for="photo-files">
+          <strong>Drop photos here or choose files</strong>
+          <span>JPG, PNG or WebP · up to 10 MB each</span>
+          <input id="photo-files" type="file" accept="image/jpeg,image/png,image/webp" multiple>
+        </label>
+        <p id="upload-status" role="status"></p>
+        <div id="photos"></div>
+      </fieldset>
+      <details class="site-settings">
+        <summary>Homepage text</summary>
+        <fieldset aria-label="Homepage text">
+          <label>Headline<input name="headline" required maxlength="80"></label>
+          <label>Highlighted line<input name="highlight" required maxlength="80"></label>
+          <label>Introduction<textarea name="intro" required maxlength="300" rows="3"></textarea></label>
+        </fieldset>
+      </details>
+      <details class="site-settings">
+        <summary>Business links</summary>
+        <fieldset id="links" aria-label="Business links"></fieldset>
+      </details>
+      <details class="site-settings">
+        <summary>Contact details and locations</summary>
+        <fieldset id="contact" aria-label="Contact details and locations">
+          <label>Office address<textarea name="officeAddress" required maxlength="400" rows="2"></textarea></label>
+          <label>Experience Centre details<textarea name="experienceDetails" required maxlength="400" rows="2"></textarea></label>
+        </fieldset>
+      </details>
+      <details class="site-settings">
+        <summary>Project numbers and rating</summary>
+        <fieldset aria-label="Project numbers and rating">
+          <label>Years of experience<input name="years" type="number" min="0" max="999999" required></label>
+          <label>Interior projects<input name="interiors" type="number" min="0" max="999999" required></label>
+          <label>Construction projects<input name="constructions" type="number" min="0" max="999999" required></label>
+          <label>Average rating out of 5<input name="rating" type="number" min="0" max="5" step="0.1" required></label>
+        </fieldset>
+      </details>
+      <div class="admin-actions">
+        <button type="submit">Publish changes</button>
+        <button type="button" id="sign-out" class="secondary">Sign out</button>
+        <span id="save-status" role="status"></span>
+      </div>
+    </form>
+  </main>
+</body>
+</html>

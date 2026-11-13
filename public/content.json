@@ -1,0 +1,34 @@
+{
+  "links": {
+    "instagram": "https://www.instagram.com/showydreamhome/",
+    "facebook": "https://www.facebook.com/showy.dreamhome.5",
+    "youtube": "https://www.youtube.com/@ShowyDreamhomeSolution",
+    "reviews": "https://www.google.com/maps/place/Showy+Dream+Home+Solutions/@13.2319665,77.687969,15z/data=!4m8!3m7!1s0x3bae1d8aea4629d1:0xd2fbf9124e42f1a0!8m2!3d13.2329965!4d77.6953447!9m1!1b1!16s%2Fg%2F11fmd6565c?entry=ttu&g_ep=EgoyMDI2MDYxMy4wIKXMDSoASAFQAw%3D%3D",
+    "website": "https://showydreamhome.com/",
+    "whatsapp": "https://wa.me/919740925180",
+    "phone": "tel:+91 97409 25180",
+    "office": "https://maps.app.goo.gl/mBZkdHJLZuXtGBaH7",
+    "experience": "https://maps.app.goo.gl/XgGoyFMv5C8L2zz47"
+  },
+  "headline": "Your dream home.",
+  "highlight": "One click away.",
+  "intro": "Explore our work, meet us online and begin your interior journey—all in one place.",
+  "gallery": [
+    {
+      "src": "hero-interior.png",
+      "title": "Living room inspiration",
+      "alt": "Contemporary living room interior",
+      "category": "living"
+    }
+  ],
+  "stats": {
+    "years": 12,
+    "interiors": 1800,
+    "rating": 4.9,
+    "constructions": 72
+  },
+  "contact": {
+    "officeAddress": "shop number-1, Cross Gate, House of Hiranandani, Bengaluru, Karnataka 562110.",
+    "experienceDetails": "Meet our team, view full-size displays and discover materials made for your home."
+  }
+}
